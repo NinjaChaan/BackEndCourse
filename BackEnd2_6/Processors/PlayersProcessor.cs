@@ -30,7 +30,8 @@ namespace BackEnd2_6.Processors
 				Score = 0,
 				Level = 0,
 				IsBanned = false,
-				CreationTime = DateTime.Now
+				CreationTime = DateTime.Now,
+				Items = new List<Item>()
 			};
 			return repository.CreatePlayer(p);
 		}

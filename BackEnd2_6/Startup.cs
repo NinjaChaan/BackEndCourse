@@ -25,7 +25,7 @@ namespace BackEnd2_6
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-			services.UseRepository(new InMemoryRepository());
+			services.UseRepository(new MongoDbRepository());
 			services.UsePlayersProcessor();
 			services.UseItemsProcessor();
         }
