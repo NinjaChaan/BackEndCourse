@@ -25,6 +25,9 @@ namespace BackEnd2_6
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			services.UseRepository(new InMemoryRepository());
+			services.UsePlayersProcessor();
+			services.UseItemsProcessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
