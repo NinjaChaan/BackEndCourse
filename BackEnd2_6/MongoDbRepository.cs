@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackEnd2_6.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BackEnd2_6
@@ -54,6 +55,22 @@ namespace BackEnd2_6
 			return (await PlayerCollection.FindAsync(filter)).ToList().ToArray();
 		}
 
+		public async Task<Player[]> GetTopPlayers(int amount) {
+			return PlayerCollection.AsQueryable().OrderByDescending(x => x.Score).Take(amount).ToArray();
+		}
+
+		public async Task<int> GetCommonLevel() {
+
+			var common = await PlayerCollection.Aggregate()
+				.Project(x => new { x.Level })
+				.Group(x => x.Level, g => new {
+					Level = g.Key,
+					Count = g.Count()
+				}).SortByDescending(x => x.Count).Limit(1).FirstOrDefaultAsync();
+
+			return common.Level;
+		}
+
 		public async Task<Item> GetItem(Guid playerId, Guid id) {
 			var player = await GetPlayer(playerId);
 			return player.Items.Single(x => x.Id == id);
@@ -61,6 +78,12 @@ namespace BackEnd2_6
 
 		public async Task<Player> GetPlayer(Guid id) {
 			var filter = Builders<Player>.Filter.Eq("Id", id);
+			var player = await PlayerCollection.FindAsync(filter);
+			return player.Single();
+		}
+
+		public async Task<Player> GetPlayer(string name) {
+			var filter = Builders<Player>.Filter.Eq("Name", name);
 			var player = await PlayerCollection.FindAsync(filter);
 			return player.Single();
 		}
@@ -86,6 +109,20 @@ namespace BackEnd2_6
 
 			await PlayerCollection.FindOneAndUpdateAsync(filter, update);
 			return (await PlayerCollection.FindAsync(filter)).Single();
+		}
+
+		public async Task ModifyPlayerName(Guid id, string newName) {
+			var filter = Builders<Player>.Filter.Eq("Id", id);
+			UpdateDefinition<Player> update = Builders<Player>.Update.Set("Name", newName);
+
+			await PlayerCollection.UpdateOneAsync(filter, update);
+		}
+
+		public async Task IncrementPlayerScore(Guid id, int score) {
+			var filter = Builders<Player>.Filter.Eq("Id", id);
+			UpdateDefinition<Player> update = Builders<Player>.Update.Inc("Score", score);
+
+			await PlayerCollection.UpdateOneAsync(filter, update);
 		}
 	}
 }

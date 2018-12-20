@@ -25,14 +25,32 @@ namespace BackEnd2_6
 			return players.SingleOrDefault(x => x.Id == id);
 		}
 
+		public async Task<Player> GetPlayer(string name) {
+			return players.SingleOrDefault(x => x.Name == name);
+		}
+
 		public async Task<Player[]> GetAllPlayers() {
 			return players.ToArray();
+		}
+
+		public async Task<Player[]> GetTopPlayers(int amount) {
+			return players.AsQueryable().OrderByDescending(x => x.Score).Take(amount).ToArray();
 		}
 
 		public async Task<Player> ModifyPlayer(Guid id, ModifiedPlayer player) {
 			Player p = await GetPlayer(id);
 			p.Score = player.Score;
 			return p;
+		}
+
+		public async Task ModifyPlayerName(Guid id, string newName) {
+			Player p = await GetPlayer(id);
+			p.Name = newName;
+		}
+
+		public async Task IncrementPlayerScore(Guid id, int score) {
+			Player p = await GetPlayer(id);
+			p.Score += score;
 		}
 
 		public async Task<Item> GetItem(Guid playerId, Guid id) {
@@ -62,6 +80,11 @@ namespace BackEnd2_6
 			Player p = await GetPlayer(playerId);
 			p.Items.Remove(i);
 			return i;
+		}
+
+		public async Task<int> GetCommonLevel() {
+			var commonLevel = players.AsQueryable().Select(x => x.Level).GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault();
+			return commonLevel.Key;
 		}
 	}
 }

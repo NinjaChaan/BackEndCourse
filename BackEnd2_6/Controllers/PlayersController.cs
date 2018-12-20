@@ -19,14 +19,29 @@ namespace BackEnd2_6.Controllers
 			this.playersProcessor = playersProcessor;
 		}
 
-		[HttpGet("{id}")]
+		[HttpGet("{id:Guid}")]
 		public Task<Player> Get(Guid id) {
 			return playersProcessor.Get(id);
+		}
+
+		[HttpGet("{name}")]
+		public Task<Player> Get(string name) {
+			return playersProcessor.Get(name);
 		}
 
 		[HttpGet]
 		public Task<Player[]> GetAll() {
 			return playersProcessor.GetAll();
+		}
+
+		[HttpGet("top/{x}")]
+		public Task<Player[]> GetTopPlayers(int x) {
+			return playersProcessor.GetTopPlayers(x);
+		}
+
+		[HttpGet("commonLevel")]
+		public Task<int> GetCommonLevel() {
+			return playersProcessor.GetCommonLevel();
 		}
 
 		[HttpPost]
@@ -37,6 +52,16 @@ namespace BackEnd2_6.Controllers
 		[HttpPut("{id}")]
 		public Task<Player> Modify(Guid id, [FromBody] ModifiedPlayer player) {
 			return playersProcessor.Modify(id, player);
+		}
+
+		[HttpPut("{id}/updateName")]
+		public Task ModifyPlayerName(Guid id, [FromBody] string newName) {
+			return playersProcessor.ModifyPlayerName(id, newName);
+		}
+
+		[HttpPut("{id}/updateScore")]
+		public Task IncrementPlayerScore(Guid id, [FromBody] int score) {
+			return playersProcessor.IncrementPlayerScore(id, score);
 		}
 
 		[HttpDelete("{id}")]

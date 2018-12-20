@@ -9,9 +9,14 @@ namespace BackEnd2_6
 	public interface IRepository
 	{
 		Task<Player> GetPlayer(Guid id);
+		Task<Player> GetPlayer(string name);
 		Task<Player[]> GetAllPlayers();
+		Task<Player[]> GetTopPlayers(int x);
+		Task<int> GetCommonLevel();
 		Task<Player> CreatePlayer(Player player);
 		Task<Player> ModifyPlayer(Guid id, ModifiedPlayer player);
+		Task ModifyPlayerName(Guid id, string newName);
+		Task IncrementPlayerScore(Guid id, int score);
 		Task<Player> DeletePlayer(Guid id);
 
 

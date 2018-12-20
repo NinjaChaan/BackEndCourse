@@ -18,8 +18,20 @@ namespace BackEnd2_6.Processors
 			return repository.GetPlayer(id);
 		}
 
+		public Task<Player> Get(string name) {
+			return repository.GetPlayer(name);
+		}
+
 		public Task<Player[]> GetAll() {
 			return repository.GetAllPlayers();
+		}
+
+		public Task<Player[]> GetTopPlayers(int x) {
+			return repository.GetTopPlayers(x);
+		}
+
+		public Task<int> GetCommonLevel() {
+			return repository.GetCommonLevel();
 		}
 
 		public Task<Player> Create(NewPlayer player) {
@@ -38,6 +50,14 @@ namespace BackEnd2_6.Processors
 
 		public Task<Player> Modify(Guid id, ModifiedPlayer player) {
 			return repository.ModifyPlayer(id, player);
+		}
+
+		public Task ModifyPlayerName(Guid id, string newName) {
+			return repository.ModifyPlayerName(id, newName);
+		}
+
+		public Task IncrementPlayerScore(Guid id, int score) {
+			return repository.IncrementPlayerScore(id, score);
 		}
 
 		public Task<Player> Delete(Guid id) {
