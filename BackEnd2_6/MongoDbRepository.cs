@@ -11,11 +11,13 @@ namespace BackEnd2_6
 	public class MongoDbRepository : IRepository
 	{
 		private static IMongoCollection<Player> PlayerCollection;
+		private static IMongoCollection<AuditLogMessage> LogMessages;
 
 		public MongoDbRepository() {
 			MongoClient client = new MongoClient("mongodb://localhost:27017");
 			IMongoDatabase db = client.GetDatabase("game");
 			PlayerCollection = db.GetCollection<Player>("players");
+			LogMessages = db.GetCollection<AuditLogMessage>("auditlog");
 		}
 
 		public async Task<Item> CreateItem(Guid playerId, Item item) {
@@ -123,6 +125,10 @@ namespace BackEnd2_6
 			UpdateDefinition<Player> update = Builders<Player>.Update.Inc("Score", score);
 
 			await PlayerCollection.UpdateOneAsync(filter, update);
+		}
+
+		public Task RecordAuditMessage(AuditLogMessage message) {
+			return LogMessages.InsertOneAsync(message);
 		}
 	}
 }

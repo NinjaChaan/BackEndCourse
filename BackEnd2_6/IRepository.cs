@@ -25,5 +25,7 @@ namespace BackEnd2_6
 		Task<Item> CreateItem(Guid playerId, Item item);
 		Task<Item> ModifyItem(Guid playerId, Guid id, ModifiedItem item);
 		Task<Item> DeleteItem(Guid playerId, Guid id);
+
+		Task RecordAuditMessage(AuditLogMessage message);
 	}
 }

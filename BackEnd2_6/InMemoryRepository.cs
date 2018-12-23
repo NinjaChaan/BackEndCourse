@@ -9,6 +9,7 @@ namespace BackEnd2_6
 	public class InMemoryRepository : IRepository
 	{
 		private readonly List<Player> players = new List<Player>();
+		private readonly List<AuditLogMessage> messages = new List<AuditLogMessage>();
 
 		public async Task<Player> CreatePlayer(Player player) {
 			players.Add(player);
@@ -85,6 +86,10 @@ namespace BackEnd2_6
 		public async Task<int> GetCommonLevel() {
 			var commonLevel = players.AsQueryable().Select(x => x.Level).GroupBy(x => x).OrderByDescending(x => x.Count()).FirstOrDefault();
 			return commonLevel.Key;
+		}
+
+		public async Task RecordAuditMessage(AuditLogMessage message) {
+			messages.Add(message);
 		}
 	}
 }

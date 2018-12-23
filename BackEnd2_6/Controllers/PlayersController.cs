@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackEnd2_6.Models;
 using BackEnd2_6.Processors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,6 +66,7 @@ namespace BackEnd2_6.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[AuditLogFilter("delete player")]
 		public Task<Player> Delete(Guid id) {
 			return playersProcessor.Delete(id);
 		}
